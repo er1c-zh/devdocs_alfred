@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+type AlfredResp struct {
+	Items []ResultItem `json:"items"`
+}
+
 type ResultItem struct {
 	Type         string `json:"type"`
 	Title        string `json:"title"`
@@ -12,6 +16,13 @@ type ResultItem struct {
 		Type string `json:"type"`
 		Path string `json:"path"`
 	} `json:"icon"`
+}
+
+type RpcReq struct {
+	Query string
+}
+type RpcResp struct {
+	Data []ResultItem
 }
 
 ////////////////////////////////

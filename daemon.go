@@ -26,15 +26,17 @@ const (
 // Daemon api
 ///////////////
 
-func (d *Daemon) DocList(_ interface{}, resp *[]ResultItem) error {
+func (d *Daemon) DocList(req *RpcReq, resp *RpcResp) error {
+	log.Info("DocList, req.Query: %s", req.Query)
 	data, err := GetDocsList()
 	if err != nil {
 		return err
 	}
-	*(resp) = make([]ResultItem, 0, len(data))
+	resp.Data = make([]ResultItem, 0, len(data))
 	for _, item := range data {
-		*(resp) = append(*resp, item.ToAlfred())
+		resp.Data = append(resp.Data, item.ToAlfred())
 	}
+	resp.Data = resp.Data[:5]
 	return nil
 }
 
@@ -103,7 +105,7 @@ type statusFileStruct struct {
 }
 
 func writeStatusFile(status statusFileStruct) error {
-	if err := os.MkdirAll(filepath.Dir(StatusFilePath), os.FileMode(0644)); err != nil {
+	if err := os.MkdirAll(filepath.Dir(StatusFilePath), os.FileMode(0755)); err != nil {
 		return err
 	}
 	j, _ := json.Marshal(status)

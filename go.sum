@@ -1,2 +1,4 @@
 github.com/er1c-zh/go-now v0.0.0-20200307061824-7f99840239b4 h1:ShaRE1k9t3rV9QEBLZDWhr5Prxt4K/7ae9TlqmSAi4c=
 github.com/er1c-zh/go-now v0.0.0-20200307061824-7f99840239b4/go.mod h1:TQc5TVH/HBUpwarXhPklMU1X/uNujtOIpl4pgQBLp1o=
+github.com/er1c-zh/go-now v0.0.0-20220312184642-6efafc2dadf2 h1:qL/M/oI5NeY0GT12CgkDlkek52NfpNhBH5QC7R8f/QU=
+github.com/er1c-zh/go-now v0.0.0-20220312184642-6efafc2dadf2/go.mod h1:TQc5TVH/HBUpwarXhPklMU1X/uNujtOIpl4pgQBLp1o=
