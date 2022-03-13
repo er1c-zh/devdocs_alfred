@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/er1c-zh/devdocs_alfred/fuzzy_match"
 	"github.com/er1c-zh/go-now/log"
 	"io/ioutil"
 	"net"
@@ -26,6 +27,29 @@ const (
 // Daemon api
 ///////////////
 
+var (
+	cmdList = []Cmd{
+		{"doc", "查询文档列表"},
+		{"cache", "缓存文档"},
+		{"update", "更新文档"},
+		{"reset", "重置本地设置"},
+	}
+)
+
+func (d *Daemon) CmdList(req *RpcReq, resp *RpcResp) error {
+	log.Info("CmdList, req.Query: %s", req.Query)
+	resp.Data = make([]ResultItem, 0, len(cmdList))
+	for _, item := range cmdList {
+		resp.Data = append(resp.Data, item.ToAlfred())
+	}
+	if req.Cmd == "" {
+		// 没有输入时展示所有的
+		return nil
+	}
+	resp.Data = fuzzy_match.FuzzyMatch[ResultItem](req.Cmd, resp.Data, fuzzy_match.NewOption().WithLimit(5).WithMinScore(1))
+	return nil
+}
+
 func (d *Daemon) DocList(req *RpcReq, resp *RpcResp) error {
 	log.Info("DocList, req.Query: %s", req.Query)
 	data, err := GetDocsList()
@@ -36,7 +60,8 @@ func (d *Daemon) DocList(req *RpcReq, resp *RpcResp) error {
 	for _, item := range data {
 		resp.Data = append(resp.Data, item.ToAlfred())
 	}
-	resp.Data = resp.Data[:5]
+	resp.Data = fuzzy_match.FuzzyMatch[ResultItem](req.Query, resp.Data,
+		fuzzy_match.NewOption().WithLimit(5))
 	return nil
 }
 
@@ -48,6 +73,8 @@ func (d *Daemon) DocList(req *RpcReq, resp *RpcResp) error {
 func (d *Daemon) Run() {
 	defer func() {
 		if err := recover(); err != nil {
+			log.Fatal("panic: %v", err)
+			log.Flush()
 			fmt.Printf("panic: %v\n", err)
 		}
 	}()

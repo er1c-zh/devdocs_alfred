@@ -25,15 +25,23 @@ func NewCli(daemonStatus statusFileStruct) (*Cli, error) {
 }
 
 func (c *Cli) Router(cmd string, query string) []ResultItem {
+	api := ""
 	switch cmd {
 	case "doc":
-		var data RpcResp
-		err := c.client.Call("Daemon.DocList", &RpcReq{Query: query}, &data)
-		if err != nil {
-			log.Error("Call DocList fail: %s", err.Error())
-			return []ResultItem{{Title: "call daemon err"}}
-		}
-		return data.Data
+		api = "Daemon.DocList"
+	default:
+		api = "Daemon.CmdList"
 	}
-	return []ResultItem{{Title: "unsupported cmd"}}
+	if api == "" {
+		return []ResultItem{{Title: "unsupported cmd"}}
+	}
+
+	var data RpcResp
+	log.Info("cli.Call(%s, %s, %s)", api, cmd, query)
+	err := c.client.Call(api, &RpcReq{Cmd: cmd, Query: query}, &data)
+	if err != nil {
+		log.Error("Call %s fail: %s", api, err.Error())
+		return GenMsgResultItemList("Call daemon fail.")
+	}
+	return data.Data
 }

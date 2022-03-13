@@ -18,11 +18,39 @@ type ResultItem struct {
 	} `json:"icon"`
 }
 
+func GenMsgResultItemList(msg string) []ResultItem {
+	return []ResultItem{
+		{Title: msg},
+	}
+}
+
+func (r ResultItem) GetString() string {
+	return r.Title
+}
+
 type RpcReq struct {
+	Cmd   string
 	Query string
 }
 type RpcResp struct {
 	Data []ResultItem
+}
+
+////////////////////////////////
+// base model
+////////////////////////////////
+
+type Cmd struct {
+	Title string
+	Desc  string
+}
+
+func (c Cmd) ToAlfred() ResultItem {
+	return ResultItem{
+		Title:        c.Title,
+		Subtitle:     c.Desc,
+		Autocomplete: c.Title,
+	}
 }
 
 ////////////////////////////////
@@ -49,5 +77,6 @@ func (m RespDocMeta) ToAlfred() ResultItem {
 	dest.Title = m.Name
 	dest.Subtitle = fmt.Sprintf("%s %s %s", m.Name, m.Version, m.Release)
 	dest.Arg = m.Slug
+	dest.Autocomplete = dest.Title
 	return dest
 }

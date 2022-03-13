@@ -31,7 +31,7 @@ func main() {
 	switch cmd {
 	case "daemon":
 		(&Daemon{}).Run()
-	case "kill":
+	case "kill", "reload":
 		daemon, err := readStatusFile()
 		if err != nil {
 			log.Error("readStatusFile fail: %s", err.Error())
@@ -50,6 +50,10 @@ func main() {
 			log.Error("proc.Kill fail: %s", err.Error())
 			return
 		}
+		if cmd == "kill" {
+			return
+		}
+		createDaemon()
 		return
 	default:
 		var result []ResultItem
@@ -71,7 +75,7 @@ func main() {
 		}
 		cli, err := NewCli(daemon)
 		if err != nil {
-			result = []ResultItem{{Title: "NewCli fail"}}
+			result = GenMsgResultItemList("NewCli fail.")
 			return
 		}
 		result = cli.Router(cmd, query)
