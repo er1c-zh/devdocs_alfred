@@ -46,7 +46,8 @@ func (d *Daemon) CmdList(req *RpcReq, resp *RpcResp) error {
 		// 没有输入时展示所有的
 		return nil
 	}
-	resp.Data = fuzzy_match.FuzzyMatch[ResultItem](req.Cmd, resp.Data, fuzzy_match.NewOption().WithLimit(5).WithMinScore(1))
+	resp.Data = fuzzy_match.FuzzyMatch[ResultItem](req.Cmd, resp.Data,
+		fuzzy_match.NewOption().WithLimit(5).WithMinScore(1).WithDebug())
 	return nil
 }
 
@@ -62,6 +63,30 @@ func (d *Daemon) DocList(req *RpcReq, resp *RpcResp) error {
 	}
 	resp.Data = fuzzy_match.FuzzyMatch[ResultItem](req.Query, resp.Data,
 		fuzzy_match.NewOption().WithLimit(5))
+	return nil
+}
+
+func (d *Daemon) SearchDoc(req *RpcReq, resp *RpcResp) error {
+	log.Info("SearchDoc, req.Query: %s", req.Query)
+	// req.Query -> {doc_slug}_{query}
+	queryList := strings.SplitN(req.Query, "_", 2)
+	if len(queryList) != 2 {
+		log.Warn("SearchDoc invalid query: '%s'", req.Query)
+		return nil
+	}
+	docSlug, _query := queryList[0], queryList[1]
+	data, err := GetDocIndex(docSlug)
+	if err != nil {
+		log.Error("SearchDoc.GetDocIndex fail: %s", err.Error())
+		return nil
+	}
+
+	data = fuzzy_match.FuzzyMatch(_query, data,
+		fuzzy_match.NewOption().WithLimit(10).WithMinScore(1))
+	resp.Data = make([]ResultItem, 0, len(data))
+	for _, item := range data {
+		resp.Data = append(resp.Data, item.ToAlfred(docSlug))
+	}
 	return nil
 }
 

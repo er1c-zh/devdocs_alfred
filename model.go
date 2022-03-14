@@ -74,9 +74,38 @@ type RespDocMeta struct {
 
 func (m RespDocMeta) ToAlfred() ResultItem {
 	var dest ResultItem
-	dest.Title = m.Name
-	dest.Subtitle = fmt.Sprintf("%s %s %s", m.Name, m.Version, m.Release)
+	dest.Title = fmt.Sprintf("%s_%s_%s", m.Name, m.Version, m.Release)
+	dest.Subtitle = m.Name
 	dest.Arg = m.Slug
 	dest.Autocomplete = dest.Title
 	return dest
+}
+
+type DocIndex struct {
+	Entries []DocIndexEntry `json:"entries"`
+	Types   []DocIndexType  `json:"types"`
+}
+
+type DocIndexEntry struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
+	Type string `json:"type"`
+}
+
+func (e DocIndexEntry) ToAlfred(docSlug string) ResultItem {
+	var dest ResultItem
+	dest.Title = e.Name
+	dest.Subtitle = fmt.Sprintf("分类: %s", e.Type)
+	dest.Arg = fmt.Sprintf("%s/%s/%s", UrlBase, docSlug, e.Path)
+	return dest
+}
+
+func (e DocIndexEntry) GetString() string {
+	return e.Name
+}
+
+type DocIndexType struct {
+	Count int    `json:"count"`
+	Name  string `json:"name"`
+	Slug  string `json:"slug"`
 }

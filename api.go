@@ -43,6 +43,18 @@ func GetDocsList() ([]RespDocMeta, error) {
 	}, false)
 }
 
+// GetDocIndex 获取某个文档的索引
+func GetDocIndex(docSlug string) ([]DocIndexEntry, error) {
+	api := fmt.Sprintf("/docs/%s/index.json", docSlug)
+	return cacheWrapper[[]DocIndexEntry](api, func() ([]DocIndexEntry, error) {
+		data, err := loader[DocIndex](api)
+		if err != nil {
+			return nil, err
+		}
+		return data.Entries, nil
+	}, false)
+}
+
 func loader[T any](uri string) (T, error) {
 	t0 := time.Now()
 	defer func() {

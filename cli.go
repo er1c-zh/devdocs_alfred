@@ -29,6 +29,8 @@ func (c *Cli) Router(cmd string, query string) []ResultItem {
 	switch cmd {
 	case "doc":
 		api = "Daemon.DocList"
+	case "search":
+		api = "Daemon.SearchDoc"
 	default:
 		api = "Daemon.CmdList"
 	}

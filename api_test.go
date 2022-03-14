@@ -16,3 +16,14 @@ func TestGetDocsList(t *testing.T) {
 	j, _ := json.Marshal(v)
 	t.Logf("%s", string(j))
 }
+
+func TestGetDocIndex(t *testing.T) {
+	defer log.Flush()
+	v, err := GetDocIndex("ruby~3")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	j, _ := json.Marshal(v)
+	t.Logf("%s", string(j))
+}
