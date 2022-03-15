@@ -3,8 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/er1c-zh/devdocs_alfred/fuzzy_match"
-	"github.com/er1c-zh/go-now/log"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -14,6 +12,9 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+
+	"github.com/er1c-zh/devdocs_alfred/fuzzy_match"
+	"github.com/er1c-zh/go-now/log"
 )
 
 type Daemon struct{}

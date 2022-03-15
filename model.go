@@ -1,21 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type AlfredResp struct {
 	Items []ResultItem `json:"items"`
 }
 
 type ResultItem struct {
-	Type         string `json:"type"`
-	Title        string `json:"title"`
-	Subtitle     string `json:"subtitle"`
-	Arg          string `json:"arg"`
-	Autocomplete string `json:"autocomplete"`
-	Icon         struct {
-		Type string `json:"type"`
-		Path string `json:"path"`
-	} `json:"icon"`
+	Type         string     `json:"type"`
+	Title        string     `json:"title"`
+	Subtitle     string     `json:"subtitle"`
+	Arg          string     `json:"arg"`
+	Autocomplete string     `json:"autocomplete"`
+	Icon         ResultIcon `json:"icon"`
+}
+
+type ResultIcon struct {
+	Type string `json:"-"`
+	Path string `json:"path"`
 }
 
 func GenMsgResultItemList(msg string) []ResultItem {
@@ -78,6 +83,9 @@ func (m RespDocMeta) ToAlfred() ResultItem {
 	dest.Subtitle = m.Name
 	dest.Arg = m.Slug
 	dest.Autocomplete = dest.Title
+	dest.Icon = ResultIcon{
+		Path: fmt.Sprintf("./icons/docs/%s_16@2x.png", strings.ToLower(m.Name)),
+	}
 	return dest
 }
 
