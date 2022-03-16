@@ -8,8 +8,6 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
-		<key>06E801E9-C002-4855-9990-5E88FC3BA553</key>
-		<array/>
 		<key>343F069F-7746-433C-BC1C-73E2C987791A</key>
 		<array>
 			<dict>
@@ -41,19 +39,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>8140FCE7-D60F-431B-9B76-476FE32D976C</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>7B8FF756-E7F0-4035-B4E1-554EB2EB53AC</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>06E801E9-C002-4855-9990-5E88FC3BA553</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -102,78 +87,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>mdocs</string>
-				<key>subtext</key>
-				<string>管理devdocs</string>
-				<key>text</key>
-				<string>devdocs</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>7B8FF756-E7F0-4035-B4E1-554EB2EB53AC</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<true/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>keyword</key>
-				<string>docs</string>
-				<key>queuedelaycustom</key>
-				<integer>3</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<true/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string></string>
-				<key>script</key>
-				<string>cmd=`echo '{query}' | awk '{print $1}'`
-query=`echo '{query}' | awk '{for(i=2;i&lt;=NF;++i)print $i}'`
-/Users/nuc/project/devdocs_alfred/output/devdocs_alfred -cmd "$cmd" -query "$query"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>06E801E9-C002-4855-9990-5E88FC3BA553</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -197,7 +110,13 @@ query=`echo '{query}' | awk '{for(i=2;i&lt;=NF;++i)print $i}'`
 				<key>runningsubtext</key>
 				<string>Searching...</string>
 				<key>script</key>
-				<string>./devdocs_alfred -cmd search -query {query}</string>
+				<string>suf='amd64'
+arch=`uname -m`
+if [ 'arm64' -eq $arch ]; then
+	suf='arm64'
+fi
+./devdocs_alfred_$suf -cmd search -query {query}
+</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -265,7 +184,12 @@ query=`echo '{query}' | awk '{for(i=2;i&lt;=NF;++i)print $i}'`
 				<key>runningsubtext</key>
 				<string>Searching...</string>
 				<key>script</key>
-				<string>./devdocs_alfred -cmd doc -query {query}</string>
+				<string>suf='amd64'
+arch=`uname -m`
+if [ 'arm64' -eq $arch ]; then
+	suf='arm64'
+fi
+./devdocs_alfred_$suf -cmd doc -query {query}</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -360,13 +284,6 @@ query=`echo '{query}' | awk '{for(i=2;i&lt;=NF;++i)print $i}'`
 	<string></string>
 	<key>uidata</key>
 	<dict>
-		<key>06E801E9-C002-4855-9990-5E88FC3BA553</key>
-		<dict>
-			<key>xpos</key>
-			<integer>205</integer>
-			<key>ypos</key>
-			<integer>35</integer>
-		</dict>
 		<key>343F069F-7746-433C-BC1C-73E2C987791A</key>
 		<dict>
 			<key>xpos</key>
@@ -387,13 +304,6 @@ query=`echo '{query}' | awk '{for(i=2;i&lt;=NF;++i)print $i}'`
 			<integer>210</integer>
 			<key>ypos</key>
 			<integer>175</integer>
-		</dict>
-		<key>7B8FF756-E7F0-4035-B4E1-554EB2EB53AC</key>
-		<dict>
-			<key>xpos</key>
-			<integer>15</integer>
-			<key>ypos</key>
-			<integer>35</integer>
 		</dict>
 		<key>8140FCE7-D60F-431B-9B76-476FE32D976C</key>
 		<dict>
